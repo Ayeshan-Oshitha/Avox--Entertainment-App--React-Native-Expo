@@ -12,6 +12,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { images, icons } from "../../constants";
 
+import { signIn } from "../../lib/firebase";
+
 const SignIn = () => {
   const [form, setForm] = useState({
     email: "",
@@ -21,7 +23,18 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const submit = () => {};
+  const SignInSubmit = async () => {
+    // setIsSubmitting(true); // Set submitting state to true while waiting for Firebase response
+    // setErrorMessage(""); // Clear any previous error messages
+    console.log("Inside Sign In function");
+    try {
+      await signIn(form.email, form.password);
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -79,7 +92,7 @@ const SignIn = () => {
           </View>
 
           <TouchableOpacity
-            onPress={submit}
+            onPress={SignInSubmit}
             className="bg-secondary mt-16 w-full min-h-[60px] justify-center items-center rounded-xl mb-8"
           >
             <Text className="text-primary font-psemibold text-lg">Sign in</Text>

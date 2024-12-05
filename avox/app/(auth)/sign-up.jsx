@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { images, icons } from "../../constants";
+import { createAccount } from "../../lib/firebase";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -21,8 +22,20 @@ const SignUp = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const submit = () => {};
+  const SignUpsubmit = async () => {
+    setIsSubmitting(true); // Set submitting state to true while waiting for Firebase response
+    setErrorMessage(""); // Clear any previous error messages
+    console.log("Inside Sign Up function");
+    try {
+      await createAccount(form.username, form.email, form.password);
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -91,7 +104,7 @@ const SignUp = () => {
           </View>
 
           <TouchableOpacity
-            onPress={submit}
+            onPress={SignUpsubmit}
             className="bg-secondary mt-16 w-full min-h-[60px] justify-center items-center rounded-xl mb-8"
           >
             <Text className="text-primary font-psemibold text-lg">Sign Up</Text>
@@ -106,6 +119,10 @@ const SignUp = () => {
               className="text-lg font-psemibold text-secondary"
             >
               Sign In
+            </Link>
+
+            <Link href="/home" className="text-lg font-psemibold text-white">
+              home
             </Link>
           </View>
         </View>
