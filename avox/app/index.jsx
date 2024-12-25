@@ -1,9 +1,8 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-//import { useUser } from "../context/UserContext";
 import { images } from "../constants";
 
 export default function Index() {
