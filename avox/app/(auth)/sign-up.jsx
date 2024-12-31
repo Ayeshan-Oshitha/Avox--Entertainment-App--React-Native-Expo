@@ -120,10 +120,6 @@ const SignUp = () => {
             >
               Sign In
             </Link>
-
-            <Link href="/home" className="text-lg font-psemibold text-white">
-              home
-            </Link>
           </View>
         </View>
       </ScrollView>

@@ -5,10 +5,13 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector, useDispatch } from "react-redux";
+import { incrementCounter } from "../../store/CounterStore";
 
 import { images, icons } from "../../constants";
 import SearchField from "../../components/SearchField";
@@ -19,6 +22,9 @@ const Home = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const counter = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
 
   const fetchSongs = async (query) => {
     setLoading(true);
@@ -32,13 +38,16 @@ const Home = () => {
     }
   };
 
-  // Example to call fetchSongs with a sample query when the component mounts
   useEffect(() => {
-    fetchSongs("Michael Jackson"); // Replace this with dynamic search input if needed
+    fetchSongs("Michael Jackson");
   }, []);
 
+  const handleCardClick = () => {
+    dispatch(incrementCounter());
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <TouchableOpacity style={styles.itemContainer} onPress={handleCardClick}>
       <Image
         source={{ uri: item.album.cover_medium }}
         style={styles.albumCover}
@@ -47,7 +56,7 @@ const Home = () => {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.artist}>{item.artist.name}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -84,6 +93,9 @@ const Home = () => {
           />
         )}
       </SafeAreaView>
+      <View style={styles.counterContainer}>
+        <Text style={styles.counterText}>Counter: {counter}</Text>
+      </View>
     </>
   );
 };
@@ -150,5 +162,19 @@ const styles = StyleSheet.create({
   artist: {
     color: "#AAAAAA",
     fontSize: 14,
+  },
+  counterContainer: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#E5D9F2",
+    padding: 10,
+    borderRadius: 8,
+    elevation: 5,
+  },
+  counterText: {
+    fontSize: 16,
+    color: "#69247C",
+    fontWeight: "bold",
   },
 });

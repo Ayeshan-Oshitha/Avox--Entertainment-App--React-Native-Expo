@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  signOut,
 } from "firebase/auth";
 import { Alert } from "react-native";
 
@@ -35,7 +36,7 @@ export const createAccount = async (username, email, password) => {
     });
     Alert.alert("User created successfully", "You can now sign in");
     console.log("User created successfully", userCredential);
-    router.push("/home");
+    router.push("/sign-in");
     return userCredential;
   } catch (error) {
     Alert.alert("Error creating user", error.message);
@@ -47,8 +48,8 @@ export const signIn = async (email, password) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      Alert.alert("User created successfully", "You can now sign in");
-      console.log("User created successfully", user);
+      Alert.alert("Logged in successfully", "You have been signed in");
+      console.log("User Logged in successfully", user);
       router.push("/home");
     })
     .catch((error) => {
@@ -67,3 +68,17 @@ export const signIn = async (email, password) => {
 //     console.log("No user is signed in.");
 //   }
 // };
+
+export const logout = async () => {
+  console.log("Inside logout function");
+  try {
+    await signOut(auth);
+    Alert.alert("Logged out successfully", "You have been signed out");
+    console.log("User signed out successfully");
+    router.push("/sign-in");
+  } catch (error) {
+    console.error("Error signing out: ", error);
+    Alert.alert("Error signing out", error.message);
+    throw error;
+  }
+};

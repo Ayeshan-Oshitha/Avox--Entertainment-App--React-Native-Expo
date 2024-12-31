@@ -36,9 +36,9 @@ const TabLayout = () => {
             borderTopWidth: 1,
             borderTopColor: "#232533",
             height: 74,
-            display: "flex", // Ensures items are in a row
-            flexDirection: "row", // Ensures items are in a row
-            alignItems: "center", // Center items vertically
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           },
         }}
       >
