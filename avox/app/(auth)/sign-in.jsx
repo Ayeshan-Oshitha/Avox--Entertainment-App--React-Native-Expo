@@ -19,13 +19,30 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!form.password) {
+      newErrors.password = "Password is required.";
+    } else if (form.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const SignInSubmit = async () => {
-    // setIsSubmitting(true); // Set submitting state to true while waiting for Firebase response
-    // setErrorMessage(""); // Clear any previous error messages
+    if (!validateForm()) return;
     console.log("Inside Sign In function");
     try {
       await signIn(form.email, form.password);
@@ -61,6 +78,11 @@ const SignIn = () => {
                 onChangeText={(e) => setForm({ ...form, email: e })}
               />
             </View>
+            {errors.email && (
+              <Text className="text-red-500 text-base mt-1">
+                {errors.email}
+              </Text>
+            )}
           </View>
 
           <View className="space-y-2 mt-7 ">
@@ -84,6 +106,11 @@ const SignIn = () => {
                 />
               </TouchableOpacity>
             </View>
+            {errors.password && (
+              <Text className="text-red-500 text-base mt-1">
+                {errors.password}
+              </Text>
+            )}
             <View className="flex flex-row justify-end">
               <Text className="text-base text-secondary-100 font-pmedium mt-1 mb-2  ">
                 Forget password ?

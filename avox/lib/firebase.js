@@ -55,7 +55,7 @@ export const signIn = async (email, password) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      Alert.alert("Error creating user", errorMessage);
+      Alert.alert("Error Sign In", errorMessage);
       throw error;
     });
 };

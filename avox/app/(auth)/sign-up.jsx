@@ -19,14 +19,38 @@ const SignUp = () => {
     password: "",
     username: "",
   });
-
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!form.username.trim()) {
+      newErrors.username = "Username is required.";
+    }
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!form.password.trim()) {
+      newErrors.password = "Password is required.";
+    } else if (form.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const SignUpsubmit = async () => {
-    setIsSubmitting(true); // Set submitting state to true while waiting for Firebase response
-    setErrorMessage(""); // Clear any previous error messages
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+    setErrorMessage("");
     console.log("Inside Sign Up function");
     try {
       await createAccount(form.username, form.email, form.password);
@@ -63,6 +87,11 @@ const SignUp = () => {
                 onChangeText={(e) => setForm({ ...form, username: e })}
               />
             </View>
+            {errors.username && (
+              <Text className="text-red-500 text-base mt-1">
+                {errors.username}
+              </Text>
+            )}
           </View>
 
           <View className="space-y-2 mt-7 ">
@@ -78,6 +107,11 @@ const SignUp = () => {
                 onChangeText={(e) => setForm({ ...form, email: e })}
               />
             </View>
+            {errors.email && (
+              <Text className="text-red-500 text-base mt-1">
+                {errors.email}
+              </Text>
+            )}
           </View>
 
           <View className="space-y-2 mt-7 ">
@@ -101,6 +135,11 @@ const SignUp = () => {
                 />
               </TouchableOpacity>
             </View>
+            {errors.password && (
+              <Text className="text-red-500 text-base mt-1">
+                {errors.password}
+              </Text>
+            )}
           </View>
 
           <TouchableOpacity
